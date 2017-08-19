@@ -47,7 +47,7 @@ def using_requests(request_url, apisign):
                 headers={"apisign": apisign}
             ).json()
 
-class Bittrex(object):
+class API_Bittrex(object):
     """
     Used for requesting Bittrex with API key and API secret
     """
