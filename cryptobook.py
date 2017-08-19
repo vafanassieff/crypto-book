@@ -11,7 +11,7 @@ def price(args):
     if not args.exchange:
         args.exchange = 'Bittrex'
 
-    market = '{0}-{1}'.format(args.market, args.currency)
+    market = args.market + '-' + args.currency
     request = api.get_marketsummary(market)
     if not request['message']:
         price = str(request['result'][0]['Last'])
@@ -22,20 +22,49 @@ def price(args):
     else:
         print(request['message'])
 
-# create the top-level parser
-parser = argparse.ArgumentParser(prog='PROG')
-subparsers = parser.add_subparsers(help='Use -h with the subcommande to see the help section')
 
-# create the parser for the "price" command
-parser_price = subparsers.add_parser('price', help='Show the current price of the currency specified in currency')
-parser_price.add_argument('currency', type=str, help='Currency you want to see the price default exchange in BTC')
-parser_price.add_argument('-m', '--market', action='store', type=str, dest='market', nargs='?', help='Choose the market BTC ETH | default is BTC')
-parser_price.add_argument('-e', '--exchange', action='store', type=str, dest='exchange', nargs='?', help='Choose the market default is Bittrex')
-parser_price.add_argument('-q', '--quiet', action='store_true', help='Only the price is Ouput')
-parser_price.set_defaults(function=price)
+def main(args):
+	args.function(args)
 
-# parse some argument lists
-args = parser.parse_args()
+if __name__ == '__main__':
+	# Create the top-level parser
+	parser = argparse.ArgumentParser(prog='Cryptobook')
 
-#call the function of the subparser
-args.function(args)
+	parser.add_argument('--version',
+						action='version',
+						version='%(prog)s 0.0.1')
+
+	# Creat subparser for the Price command
+	subparsers = parser.add_subparsers(help='Use -h with the subcommande to see the help section')
+
+	# Create the parser for the "price" command
+	parser_price = subparsers.add_parser('price',
+	                                    help='Show the current price of the currency specified in currency')
+	parser_price.add_argument('currency', 
+										type=str,
+	                                    help='Currency you want to see the price default exchange in BTC')
+
+	parser_price.add_argument('-m', '--market',
+										action='store',
+										type=str,
+										dest='market',
+										nargs='?',
+										choices=['BTC', 'ETH', 'USDT'],
+										help='Choose the market BTC ETH | default is BTC')
+
+	parser_price.add_argument('-e', '--exchange',
+										action='store',
+										type=str,
+										dest='exchange',
+										nargs='?',
+										help='Choose the market default is Bittrex')
+
+	parser_price.add_argument('-q', '--quiet',
+										action='store_true',
+										help='Only the price is Ouput')
+
+	parser_price.set_defaults(function=price)
+
+	# Parse argument lists
+	args = parser.parse_args()
+	main(args)
