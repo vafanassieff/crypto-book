@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 	parser_price.add_argument('-q', '--quiet',
 										action='store_true',
-										help='Only the price is Ouput')
+										help='Only price is Ouput')
 
 	parser_price.set_defaults(function=price)
 

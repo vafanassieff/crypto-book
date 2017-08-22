@@ -1,7 +1,9 @@
 # crypto-book
 Crypto-Book is a way to track and ask the price of a crypto currency in your terminal !
+
 Only supporting Python 3.x
 
+Bittrex API with [python-bittrex](https://github.com/ericsomdahl/python-bittrex)
 ## Install
 
 To install use
