@@ -1,9 +1,11 @@
-from api.bittrex import API_Bittrex
+import sys
 import json
+from api.bittrex import API_Bittrex
 
 api = API_Bittrex('key', 'secret')
 
 def get_last_price(args):
+
 	market = get_market(args)
 	request = api.get_marketsummary(market)
 	if not request['message']:
@@ -12,24 +14,18 @@ def get_last_price(args):
 	else:
 		print(request['message'])
 		sys.exit(0)
+
 def get_market(args):
+
 	if not args.market:
 		args.market = 'BTC'
 	return (args.market + '-' + str.upper(args.currency))
 
 def get_exchange(args):
+
 	if not args.exchange:
 		return ('Bittrex')
 	return (args.exchange)
-
-def price(args):
-	price = get_last_price(args)
-	if not price:
-		return
-	if args.quiet:
-		print(price)
-	else:
-		print(args.exchange, args.market, price + u'\u20bf')
 
 def	get_id():
     

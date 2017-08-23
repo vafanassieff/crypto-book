@@ -1,31 +1,25 @@
 #! /usr/bin/env python3.6
-from api.bittrex import API_Bittrex
-from function import *
 import sys
 import argparse
 import os
 import time
 import json
+from terminaltables import SingleTable
+from function.function import *
+from classes.order import Order
 
-api = API_Bittrex('key', 'secret')
-
-class Order:
-
-	def __init__(self, args):
-		self.id = get_id()
-		self.last = get_last_price(args)
-		self.time = time.strftime("%c")
-		self.market = get_market(args)
-		self.exchange = get_exchange(args)
-
-	def toJSON(self):
-		return json.dumps(self.__dict__, sort_keys=False)
-
-	def toDict(self):
-		return (self.__dict__)
+def price(args):
+    
+	price = get_last_price(args)
+	if not price:
+		return
+	if args.quiet:
+		print(price)
+	else:
+		print(get_exchange(args), get_market(args), price + u'\u20bf')
 
 def buy(args):
-
+    
 	path = './book.json'
 	# Check if the file book.json exist and if not create it
 	# and iniate it with '[]'
@@ -40,11 +34,22 @@ def buy(args):
 	with open('./book.json', 'w') as outfile:
 		json.dump(data, outfile, indent=4)
 
+	# Display the order with a nice table
+	table_data = [
+    	['id', 'Exchange', 'Market', 'Price'],
+    	[order.id , order.exchange, order.market, order.last]
+	]
+	table = SingleTable(table_data)
+	table.title = 'Buy Order'
+	print (table.table)
+
 def main(args):
-	args.function(args)
+
+    if hasattr(args, 'function'):
+    	args.function(args)
 
 if __name__ == '__main__':
-		
+
 # Create the top-level parser
 	parser = argparse.ArgumentParser(prog='Cryptobook')
 
