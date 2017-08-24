@@ -3,6 +3,8 @@ Crypto-Book is a way to track and ask the price of a crypto currency in your ter
 
 Only supporting Python 3.x
 
+This is my first python app, i'm maybe not aware of python best practice.
+
 Bittrex API with [python-bittrex](https://github.com/ericsomdahl/python-bittrex)
 ## Install
 
@@ -10,6 +12,8 @@ To install use
 
 ```
 git clone https://github.com/vafanassieff/crypto-book.git
+pip3 install terminaltables
+pip3 install colr
 ```
 ```
 ./cryptobook.py

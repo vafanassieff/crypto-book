@@ -7,6 +7,7 @@ import json
 from terminaltables import SingleTable
 from function.function import *
 from classes.order import Order
+from colr import color
 
 def price(args):
     
@@ -43,10 +44,29 @@ def buy(args):
 	table.title = 'Buy Order'
 	print (table.table)
 
+def position(args):
+
+	path = './book.json'
+	if not os.path.isfile(path):
+		print('Order book empty, use buy command to fill it')
+		return
+	data = json.loads(open(path).read())
+	table_data = [['id', 'Exchange', 'Market', 'Price', 'Current', 'Profit']]
+	i = 0
+	while i < len(data):
+		current = get_last_price_tmp(data[i]['market'])
+		profit = get_profit(data[i]['last'], current)
+		table_data.append([data[i]['id'], data[i]['exchange'], data[i]['market'], data[i]['last'], current , profit])
+		i += 1
+	table = SingleTable(table_data)
+	print (table.table)
+
 def main(args):
 
-    if hasattr(args, 'function'):
-    	args.function(args)
+	if hasattr(args, 'function'):
+		args.function(args)
+	else:
+		print("Use ./cryptobook.py -h for help")
 
 if __name__ == '__main__':
 
@@ -62,56 +82,62 @@ if __name__ == '__main__':
 
 # Create the parser for the "price" command
 	parser_price = subparsers.add_parser('price',
-										help='Show the current price of the currency specified in currency')
+						help='Show the current price of the currency specified in currency')
 	parser_price.add_argument('currency', 
-										type=str,
-										help='Currency you want to see the price default exchange in BTC')
+						type=str,
+						help='Currency you want to see the price default exchange in BTC')
 
 	parser_price.add_argument('-m', '--market',
-										action='store',
-										type=str,
-										dest='market',
-										nargs='?',
-										choices=['BTC', 'ETH', 'USDT'],
-										help='Choose the market BTC ETH | default is BTC')
+						action='store',
+						type=str,
+						dest='market',
+						nargs='?',
+						choices=['BTC', 'ETH', 'USDT'],
+						help='Choose the market BTC ETH | default is BTC')
 
 	parser_price.add_argument('-e', '--exchange',
-										action='store',
-										type=str,
-										dest='exchange',
-										nargs='?',
-										help='Choose the market default is Bittrex')
+						action='store',
+						type=str,
+						dest='exchange',
+						nargs='?',
+						help='Choose the market default is Bittrex')
 
 	parser_price.add_argument('-q', '--quiet',
-										action='store_true',
-										help='Only price is Ouput')
+						action='store_true',
+						help='Only price is Ouput')
 
 	parser_price.set_defaults(function=price)
 
 # Create the parser for the "buy" command
 	parser_buy = subparsers.add_parser('buy',
-										help='Show the current price of the currency specified in currency')
+					help='Show the current price of the currency specified in currency')
 	
 	parser_buy.add_argument('currency',
-										type=str,
-										help='Currency you want to see the price default exchange in BTC')
+					type=str,
+					help='Currency you want to see the price default exchange in BTC')
 
 	parser_buy.add_argument('-m', '--market',
-										action='store',
-										type=str,
-										dest='market',
-										nargs='?',
-										choices=['BTC', 'ETH', 'USDT'],
-										help='Choose the market BTC ETH | default is BTC')
+					action='store',
+					type=str,
+					dest='market',
+					nargs='?',
+					choices=['BTC', 'ETH', 'USDT'],
+					help='Choose the market BTC ETH | default is BTC')
 
 	parser_buy.add_argument('-e', '--exchange',
-										action='store',
-										type=str,
-										dest='exchange',
-										nargs='?',
-										help='Choose the market default is Bittrex')
+					action='store',
+					type=str,
+					dest='exchange',
+					nargs='?',
+					help='Choose the market default is Bittrex')
 	
 	parser_buy.set_defaults(function=buy)
+
+# Create the parser for the "position" command
+	parser_pos = subparsers.add_parser('position',
+					help='Show your current position')
+	
+	parser_pos.set_defaults(function=position)
 
 # Parse argument lists
 	args = parser.parse_args()
