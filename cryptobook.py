@@ -59,7 +59,30 @@ def position(args):
 		table_data.append([data[i]['id'], data[i]['exchange'], data[i]['market'], data[i]['last'], current , profit])
 		i += 1
 	table = SingleTable(table_data)
-	print (table.table)
+	print(table.table)
+
+def close(args):
+
+	path = './book.json'
+	if not os.path.isfile(path):
+			print('Order book empty, use buy command to fill it')
+			return
+	data = json.loads(open(path).read())
+	i = 0
+	while i < len(data):
+		if data[i]['id'] == args.id:
+			table_data = [['id', 'Exchange', 'Market', 'Price', 'Current', 'Profit']]
+			current = get_last_price_tmp(data[i]['market'])
+			profit = get_profit(data[i]['last'], current)
+			table_data.append([data[i]['id'], data[i]['exchange'], data[i]['market'], data[i]['last'], current , profit])
+			table = SingleTable(table_data)
+			table.title = 'Close Order'
+			print (table.table)
+			data.pop(i)
+			break
+		i += 1
+	with open('./book.json', 'w') as outfile:
+		json.dump(data, outfile, indent=4)
 
 def main(args):
 
@@ -138,6 +161,16 @@ if __name__ == '__main__':
 					help='Show your current position')
 	
 	parser_pos.set_defaults(function=position)
+
+# Create the parser for the "close" command
+	parser_close = subparsers.add_parser('close',
+					help='Show your current position')
+
+	parser_close.add_argument('id',
+					type=int,
+					help='Close the id from the order book')
+
+	parser_close.set_defaults(function=close)
 
 # Parse argument lists
 	args = parser.parse_args()
