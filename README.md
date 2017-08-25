@@ -23,6 +23,8 @@ pip3 install blessed
 ./cryptobook.py
 ```
 
+If you are on UNIX and lazzy you can run the setup.sh
+
 ## Usage
 
 To buy a crypto use 
@@ -56,6 +58,12 @@ Order book is stored in a JSON file, see example-book.json in the example folder
 ## Documention
 
 For now use the -h option for priting usage with command and subcommand
+
+## Build with
+
+* [terminaltables](https://github.com/Robpol86/terminaltables) - Cool table for term
+* [Colr](https://github.com/welbornprod/colr) - Easy color for term
+* [Blessed](https://github.com/jquast/blessed) - Used for the live view
 
 ## Disclaimer
 
