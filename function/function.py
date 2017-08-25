@@ -6,7 +6,7 @@ from colr import color
 api = API_Bittrex('key', 'secret')
 
 def get_last_price_tmp(market):
-    """Return the last price using the market"""
+	"""Return the last price using the market"""
 	request = api.get_ticker(market)
 	if not request['message']:
 		last = str(request['result']['Last'])
@@ -39,7 +39,7 @@ def get_exchange(args):
 	return ('Bittrex')
 
 def	get_id():
-    """Return the next id to append the book.json"""
+	"""Return the next id to append the book.json"""
 	path = './book.json'
 	data = json.loads(open(path).read())
 	if len(data) == 0:
@@ -49,7 +49,7 @@ def	get_id():
 	return order_id
 
 def get_profit(buying_price, current):
-    """Compute the variation since the order was placed"""
+	"""Compute the variation since the order was placed"""
 	variation = 100 * (float(current) - float(buying_price)) / float(buying_price)
 	if variation > 0:
 		variation = '+' + str(round(variation, 2)) + '%'
