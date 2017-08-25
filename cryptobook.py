@@ -5,22 +5,23 @@ import os
 import time
 import json
 from terminaltables import SingleTable
+from colr import color
+from blessed import Terminal
 from function.function import *
 from classes.order import Order
-from colr import color
 
 def price(args):
-    
+	
 	price = get_last_price(args)
 	if not price:
 		return
 	if args.quiet:
 		print(price)
 	else:
-		print(get_exchange(args), get_market(args), price + u'\u20bf')
+		print(get_exchange(args), get_market(args), price)
 
 def buy(args):
-    
+	
 	path = './book.json'
 	# Check if the file book.json exist and if not create it
 	# and iniate it with '[]'
@@ -37,32 +38,15 @@ def buy(args):
 
 	# Display the order with a nice table
 	table_data = [
-    	['id', 'Exchange', 'Market', 'Price'],
-    	[order.id , order.exchange, order.market, order.last]
+		['id', 'Exchange', 'Market', 'Price'],
+		[order.id , order.exchange, order.market, order.last]
 	]
 	table = SingleTable(table_data)
 	table.title = 'Buy Order'
 	print (table.table)
 
-def position(args):
-
-	path = './book.json'
-	if not os.path.isfile(path):
-		print('Order book empty, use buy command to fill it')
-		return
-	data = json.loads(open(path).read())
-	table_data = [['id', 'Exchange', 'Market', 'Price', 'Current', 'Profit']]
-	i = 0
-	while i < len(data):
-		current = get_last_price_tmp(data[i]['market'])
-		profit = get_profit(data[i]['last'], current)
-		table_data.append([data[i]['id'], data[i]['exchange'], data[i]['market'], data[i]['last'], current , profit])
-		i += 1
-	table = SingleTable(table_data)
-	print(table.table)
-
 def close(args):
-
+	
 	path = './book.json'
 	if not os.path.isfile(path):
 			print('Order book empty, use buy command to fill it')
@@ -74,7 +58,8 @@ def close(args):
 			table_data = [['id', 'Exchange', 'Market', 'Price', 'Current', 'Profit']]
 			current = get_last_price_tmp(data[i]['market'])
 			profit = get_profit(data[i]['last'], current)
-			table_data.append([data[i]['id'], data[i]['exchange'], data[i]['market'], data[i]['last'], current , profit])
+			table_data.append([data[i]['id'], data[i]['exchange'], 
+								data[i]['market'], data[i]['last'], current , profit])
 			table = SingleTable(table_data)
 			table.title = 'Close Order'
 			print (table.table)
@@ -84,12 +69,48 @@ def close(args):
 	with open('./book.json', 'w') as outfile:
 		json.dump(data, outfile, indent=4)
 
-def main(args):
-
-	if hasattr(args, 'function'):
-		args.function(args)
+def position(args):
+	
+	path = './book.json'
+	if not os.path.isfile(path):
+		print('Order book empty, use buy command to fill it')
+		return
+	data = json.loads(open(path).read())
+	table_data = [['id', 'Exchange', 'Market', 'Price', 'Current', 'Profit']]
+	i = 0
+	while i < len(data):
+		current = get_last_price_tmp(data[i]['market'])
+		profit = get_profit(data[i]['last'], current)
+		table_data.append([data[i]['id'], data[i]['exchange'], 
+						data[i]['market'], data[i]['last'], current , profit])
+		i += 1
+	table = SingleTable(table_data)
+	
+	if args.live:
+		return(table.table)
 	else:
-		print("Use ./cryptobook.py -h for help")
+		print(table.table)
+
+def refresh(args):
+	"""Ugly way to make a auto refresh tab"""
+	term = Terminal()
+	loop = ""
+	with term.fullscreen(), term.cbreak():
+		while loop != 'q':
+			allo = position(args)
+			print(term.move_y(0) + ('Press Q to exit the live mode').rstrip() +
+			'\n' + term.center(allo).rstrip() + term.clear_eos)
+			loop = term.inkey(timeout=0)
+
+def main(args):
+	
+	if hasattr(args, 'function'):
+		if args.live:
+			refresh(args)
+		else:
+			args.function(args)
+	else:
+		print('Use -h to see the usage')
 
 if __name__ == '__main__':
 
@@ -159,7 +180,11 @@ if __name__ == '__main__':
 # Create the parser for the "position" command
 	parser_pos = subparsers.add_parser('position',
 					help='Show your current position')
-	
+
+	parser_pos.add_argument('-l', '--live',
+					action='store_true',
+					help='Choose the market default is Bittrex')
+
 	parser_pos.set_defaults(function=position)
 
 # Create the parser for the "close" command

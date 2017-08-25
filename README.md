@@ -17,6 +17,7 @@ To install use
 git clone https://github.com/vafanassieff/crypto-book.git
 pip3 install terminaltables
 pip3 install colr
+pip3 install blessed
 ```
 ```
 ./cryptobook.py
@@ -30,7 +31,7 @@ To buy a crypto use
 ```
 Showing your position
 ```
-./cryptoboo.py position
+./cryptoboo.py position -l
 ```
 Close a position 
 ```
@@ -42,9 +43,10 @@ Order book is stored in a JSON file, see example-book.json in the example folder
 ## Feature
 
 * Get the price of your crypto using price command
-* Choose your market (BTC, ETH, USDT) if available with
+* Choose your market (BTC, ETH, USDT) if available
 * Show your current position and profit since your opened it
 * Close position to remove it from the order book
+* Live view using position with -l
 
 ## In Dev
 
