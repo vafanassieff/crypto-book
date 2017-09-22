@@ -96,12 +96,12 @@ def position(args):
 def refresh(args):
 	"""Ugly way to make a auto refresh tab"""
 	term = Terminal()
-	loop = ""
+	key = ""
 	with term.fullscreen(), term.cbreak():
-		while loop != 'q':
-			allo = position(args)
+		while key != 'q':
+			tab = position(args)
 			print(term.move_y(0) + ('Press Q to exit the live mode').rstrip() +
-			'\n' + term.center(allo).rstrip() + term.clear_eos)
+			'\n' + term.center(tab).rstrip() + term.clear_eos)
 			loop = term.inkey(timeout=0.5)
 
 def main(args):

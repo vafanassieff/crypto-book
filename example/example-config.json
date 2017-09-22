@@ -1,0 +1,5 @@
+{
+    "book-path": "./book.json",
+    "bittrex-key": "key",
+    "bittrex-secret": "secret"
+}

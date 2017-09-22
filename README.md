@@ -24,7 +24,8 @@ pip3 install blessed
 ```
 
 If you are on UNIX and lazy you can run the setup.sh
-If needed edit the config.json file.
+
+You need to edit the example-config.json file in the example folder if needed, ranme it to example.json and move it to the root of cryptobook folder.
 
 ## Usage
 
