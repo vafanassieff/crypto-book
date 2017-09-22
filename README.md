@@ -23,7 +23,8 @@ pip3 install blessed
 ./cryptobook.py
 ```
 
-If you are on UNIX and lazzy you can run the setup.sh
+If you are on UNIX and lazy you can run the setup.sh
+If needed edit the config.json file.
 
 ## Usage
 
@@ -57,7 +58,7 @@ Order book is stored in a JSON file, see example-book.json in the example folder
 
 ## Documention
 
-For now use the -h option for priting usage with command and subcommand
+Use the -h option for priting usage with command and subcommand
 
 ## Build with
 

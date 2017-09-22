@@ -6,7 +6,10 @@ class Order:
     
 	def __init__(self, args):
 		self.id = get_id(args)
-		self.last = get_last_price(args)
+		if (args.price):
+			self.last = args.price
+		else:
+			self.last = get_last_price(args)
 		self.time = time.strftime("%c")
 		self.market = get_market(args)
 		self.exchange = get_exchange(args)

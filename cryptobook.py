@@ -181,8 +181,11 @@ if __name__ == '__main__':
 					type=str,
 					dest='exchange',
 					nargs='?',
-					help='Choose the market default is Bittrex')
-	
+					help='Choose the exchange default is Bittrex')
+	parser_buy.add_argument('-p', '--price',
+					type=float,
+					help='If you want to be more accurate you can specify the price, ignoring the one from the API')
+
 	parser_buy.set_defaults(function=buy)
 
 # Create the parser for the "position" command
