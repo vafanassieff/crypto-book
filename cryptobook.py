@@ -9,6 +9,8 @@ from colr import color
 from blessed import Terminal
 from function.function import *
 from classes.order import Order
+from api.bittrex import API_Bittrex
+
 
 def price(args):
 	
@@ -70,7 +72,7 @@ def close(args):
 		json.dump(data, outfile, indent=4)
 
 def position(args):
-	
+
 	path = './book.json'
 	if not os.path.isfile(path):
 		print('Order book empty, use buy command to fill it')
@@ -100,12 +102,18 @@ def refresh(args):
 			allo = position(args)
 			print(term.move_y(0) + ('Press Q to exit the live mode').rstrip() +
 			'\n' + term.center(allo).rstrip() + term.clear_eos)
-			loop = term.inkey(timeout=0)
+			loop = term.inkey(timeout=0.5)
 
 def main(args):
 	
+	path = "./config.json"
+	try:
+		args.config = json.loads(open(path).read())
+	except:
+		print('Error when loading config.json using default value')
+		sys.exit(0)
 	if hasattr(args, 'function'):
-		if args.live:
+		if hasattr(args, 'live'):
 			refresh(args)
 		else:
 			args.function(args)
@@ -137,7 +145,7 @@ if __name__ == '__main__':
 						dest='market',
 						nargs='?',
 						choices=['BTC', 'ETH', 'USDT'],
-						help='Choose the market BTC ETH | default is BTC')
+						help='Choose the market BTC ETH USDT| default is BTC')
 
 	parser_price.add_argument('-e', '--exchange',
 						action='store',

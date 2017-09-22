@@ -1,5 +1,5 @@
 .vscode
 *.pyc
 __pycache__
-*.json
+book.json
 setup.py
