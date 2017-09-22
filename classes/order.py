@@ -5,7 +5,7 @@ import json
 class Order:
     
 	def __init__(self, args):
-		self.id = get_id()
+		self.id = get_id(args)
 		self.last = get_last_price(args)
 		self.time = time.strftime("%c")
 		self.market = get_market(args)

@@ -24,7 +24,7 @@ def price(args):
 
 def buy(args):
 	
-	path = './book.json'
+	path = args.config['book-path']
 	# Check if the file book.json exist and if not create it
 	# and iniate it with '[]'
 	if not os.path.isfile(path):
@@ -35,7 +35,7 @@ def buy(args):
 	order = Order(args)
 	data = json.loads(open(path).read())
 	data.append(order.toDict())
-	with open('./book.json', 'w') as outfile:
+	with open(path, 'w') as outfile:
 		json.dump(data, outfile, indent=4)
 
 	# Display the order with a nice table
@@ -49,7 +49,7 @@ def buy(args):
 
 def close(args):
 	
-	path = './book.json'
+	path = args.config['book-path']
 	if not os.path.isfile(path):
 			print('Order book empty, use buy command to fill it')
 			return
@@ -73,7 +73,7 @@ def close(args):
 
 def position(args):
 
-	path = './book.json'
+	path = args.config['book-path']
 	if not os.path.isfile(path):
 		print('Order book empty, use buy command to fill it')
 		return
@@ -106,11 +106,11 @@ def refresh(args):
 
 def main(args):
 	
-	path = "./config.json"
+	config_path = "./config.json"
 	try:
-		args.config = json.loads(open(path).read())
+		args.config = json.loads(open(config_path).read())
 	except:
-		print('Error when loading config.json using default value')
+		print('Error loading config.json')
 		sys.exit(0)
 	if hasattr(args, 'function'):
 		if hasattr(args, 'live'):

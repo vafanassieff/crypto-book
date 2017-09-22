@@ -38,9 +38,9 @@ def get_exchange(args):
 		return ('Bittrex')
 	return ('Bittrex')
 
-def	get_id():
+def	get_id(args):
 	"""Return the next id to append the book.json"""
-	path = './book.json'
+	path = args.config['book-path']
 	data = json.loads(open(path).read())
 	if len(data) == 0:
 		return 0
